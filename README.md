@@ -15,5 +15,5 @@
 ## 资源
 - [论文](https://openreview.net/forum?id=xTJEN-ggl1b)
 - [视频解析](https://www.youtube.com/watch?v=3qxJ2WD8p4w&t=668s)
-- [其他实现的代码]
+- 其他实现的代码
     - https://github.com/leaderj1001/LambdaNetworks
