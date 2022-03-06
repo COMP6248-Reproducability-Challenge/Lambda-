@@ -5,12 +5,21 @@
     >   - 解决：利用Swin Transformer的patch分割法，尝试下能不能消除Lambda的PE
 
 ## TODO:
+- Main
+    - [ ] [添加 Lambda Layer](https://github.com/lucidrains/lambda-networks)
+- SE Attention
+    - [ ] [SE Attention知乎解析](https://zhuanlan.zhihu.com/p/102035721)
+    - [ ] [SE Attention CSDN](https://blog.csdn.net/Evan123mg/article/details/80058077)
+    - [ ] [SE Attention代码添加](https://github.com/moskomule/senet.pytorch/blob/master/senet/se_resnet.py)
+- ResNet 改
+    - [ ] [Torch 官方实现](https://pytorch.org/vision/stable/_modules/torchvision/models/resnet.html)
 
-- [ ] [添加 Lambda Layer](https://github.com/lucidrains/lambda-networks)
-- [ ] [SE Attention](https://zhuanlan.zhihu.com/p/102035721)
-- [ ] [COCO数据集的下载](https://blog.csdn.net/m0_37644085/article/details/81948396)
+- 数据集
+    - [ ] [COCO数据集的下载](https://blog.csdn.net/m0_37644085/article/details/81948396)
 
-- [ ] 消融实验
+- 实验部分
+    - [ ] 消融实验
+    - [ ] [Swin 改](https://github.com/microsoft/Swin-Transformer)
 
 ## 资源
 - [论文](https://openreview.net/forum?id=xTJEN-ggl1b)
