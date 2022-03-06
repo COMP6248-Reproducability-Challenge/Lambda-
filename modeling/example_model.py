@@ -6,9 +6,8 @@
 
 import numpy as np
 import torch.nn.functional as F
+from layers import conv3x3
 from torch import nn
-
-from layers.conv_layer import conv3x3
 
 
 def conv_init(m):

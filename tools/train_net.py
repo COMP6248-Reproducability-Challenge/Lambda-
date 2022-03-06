@@ -7,7 +7,7 @@
 import argparse
 import os
 import sys
-from os import mkdir
+from os import makedirs
 
 import torch.nn.functional as F
 
@@ -17,13 +17,13 @@ from data import make_data_loader
 from engine.example_trainer import do_train
 from modeling import build_model
 from solver import make_optimizer
-
 from utils.logger import setup_logger
 
 
 def train(cfg):
     model = build_model(cfg)
     device = cfg.MODEL.DEVICE
+    model.to(device)
 
     optimizer = make_optimizer(cfg, model)
     scheduler = None
@@ -47,7 +47,7 @@ def train(cfg):
 def main():
     parser = argparse.ArgumentParser(description="PyTorch Template MNIST Training")
     parser.add_argument(
-        "--config_file", default="", help="path to config file", type=str
+        "--config_file", default="configs/train_mnist_softmax.yml", help="path to config file", type=str
     )
     parser.add_argument("opts", help="Modify config options using the command-line", default=None,
                         nargs=argparse.REMAINDER)
@@ -63,7 +63,7 @@ def main():
 
     output_dir = cfg.OUTPUT_DIR
     if output_dir and not os.path.exists(output_dir):
-        mkdir(output_dir)
+        makedirs(output_dir)
 
     logger = setup_logger("template_model", output_dir, 0)
     logger.info("Using {} GPUS".format(num_gpus))

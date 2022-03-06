@@ -6,8 +6,9 @@
 
 import logging
 
-from ignite.engine import Events, create_supervised_trainer, create_supervised_evaluator
-from ignite.handlers import ModelCheckpoint, Timer
+from ignite.engine import (Events, create_supervised_evaluator,
+                           create_supervised_trainer)
+from ignite.handlers import Checkpoint, ModelCheckpoint, Timer
 from ignite.metrics import Accuracy, Loss, RunningAverage
 
 
@@ -23,6 +24,7 @@ def do_train(
     log_period = cfg.SOLVER.LOG_PERIOD
     checkpoint_period = cfg.SOLVER.CHECKPOINT_PERIOD
     output_dir = cfg.OUTPUT_DIR
+    print('Output: ', output_dir)
     device = cfg.MODEL.DEVICE
     epochs = cfg.SOLVER.MAX_EPOCHS
 
@@ -31,11 +33,15 @@ def do_train(
     trainer = create_supervised_trainer(model, optimizer, loss_fn, device=device)
     evaluator = create_supervised_evaluator(model, metrics={'accuracy': Accuracy(),
                                                             'ce_loss': Loss(loss_fn)}, device=device)
-    checkpointer = ModelCheckpoint(output_dir, 'mnist', checkpoint_period, n_saved=10, require_empty=False)
+    # checkpointer = ModelCheckpoint(output_dir, 'mnist', checkpoint_period, require_empty=False)
+    to_save = {'model': model,'optimizer': optimizer}
+    gst = lambda *_: trainer.state.epoch
+    checkpointer_handler = Checkpoint(
+        to_save, output_dir, n_saved=2, global_step_transform=gst
+    )
     timer = Timer(average=True)
 
-    trainer.add_event_handler(Events.EPOCH_COMPLETED, checkpointer, {'model': model.state_dict(),
-                                                                     'optimizer': optimizer.state_dict()})
+    trainer.add_event_handler(Events.ITERATION_COMPLETED(every=checkpoint_period), checkpointer_handler)
     timer.attach(trainer, start=Events.EPOCH_STARTED, resume=Events.ITERATION_STARTED,
                  pause=Events.ITERATION_COMPLETED, step=Events.ITERATION_COMPLETED)
 
