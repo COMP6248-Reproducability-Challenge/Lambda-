@@ -7,6 +7,7 @@
 ## TODO:
 - Main
     - [ ] [添加 Lambda Layer](https://github.com/lucidrains/lambda-networks)
+    - [X] [相对位置编码](https://www.programcreek.com/python/?CodeExample=generate+relative+positions+matrix)
 - SE Attention
     - [X] [SE Attention代码添加](https://github.com/moskomule/senet.pytorch/blob/master/senet/se_resnet.py)
 - ResNet 改
@@ -18,6 +19,10 @@
 - 实验部分
     - [ ] 消融实验
     - [ ] [Swin 改](https://github.com/microsoft/Swin-Transformer)
+
+- 添加Hook
+    - [ ] [hook](https://blog.paperspace.com/pytorch-hooks-gradient-clipping-debugging/)
+    - [ ] [grad-cam](https://github.com/jacobgil/pytorch-grad-cam)
 
 ## 资源
 - [论文](https://openreview.net/forum?id=xTJEN-ggl1b)
