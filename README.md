@@ -5,6 +5,8 @@
     >   - 解决：利用Swin Transformer的patch分割法，尝试下能不能消除Lambda的PE
 
 ## TODO:
+- Test
+    - [ ] 测试ResNet代码
 - Main
     - [ ] [添加 Lambda Layer](https://github.com/lucidrains/lambda-networks)
     - [X] [相对位置编码](https://www.programcreek.com/python/?CodeExample=generate+relative+positions+matrix)
