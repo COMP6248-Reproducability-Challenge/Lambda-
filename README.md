@@ -26,3 +26,6 @@
 - [视频解析](https://www.youtube.com/watch?v=3qxJ2WD8p4w&t=668s)
 - 其他实现的代码
     - https://github.com/leaderj1001/LambdaNetworks
+- 有用的库
+  - https://github.com/pprp/SimpleCVReproduction
+  - https://github.com/pprp/awesome-attention-mechanism-in-cv
