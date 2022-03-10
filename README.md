@@ -27,6 +27,7 @@
     - [ ] [grad-cam](https://github.com/jacobgil/pytorch-grad-cam)
 
 ## 资源
+- [框架](https://github.com/L1aoXingyu/Deep-Learning-Project-Template)
 - [论文](https://openreview.net/forum?id=xTJEN-ggl1b)
 - [视频解析](https://www.youtube.com/watch?v=3qxJ2WD8p4w&t=668s)
 -  [SE Attention知乎解析](https://zhuanlan.zhihu.com/p/102035721)
