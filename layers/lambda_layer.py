@@ -1,4 +1,5 @@
 import re
+from tkinter.messagebox import NO
 from turtle import pos
 
 import torch
@@ -35,9 +36,10 @@ def get_embedding(dim_k, n):
     return rel_pos_emb[rel_pos[0], rel_pos[1]]
 
 class LambdaLayer(nn.Module):
-    def __init__(self, dim, dim_k, n, dim_out, heads):
+    def __init__(self, dim, dim_k, n, dim_out, heads, r=None):
         super().__init__()
         self.dim_out = dim_out
+        self.r = r
         # assert(dim_out % heads) == 0
         self.heads = heads
         dim_v = dim_out // heads
@@ -52,7 +54,18 @@ class LambdaLayer(nn.Module):
             nn.BatchNorm2d(dim_v),
         )
         self.get_k = nn.Conv2d(in_channels=dim, out_channels=dim_k*heads, kernel_size=1, bias=False)
- 
+
+        if r is not None:
+            # https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html
+            self.local_pos= nn.Conv2d(in_channels=dim_k, out_channels=dim_k, kernel_size=(r,1,1), groups=dim_k)
+            # elif impl == ’depthwise conv’:
+            #     # Reshape and tile embeddings to [r, v, k] shape    
+            #     embeddings = reshape(embeddings, [r, 1, k])
+            #     embeddings = tile(embeddings, [1, v, 1])
+            #     position lambdas = depthwise conv1d(values, embeddings)
+            # # Transpose from shape [b, n, v, k] to shape [b, n, k, v]
+            # position lambdas = transpose(position lambdas, [0, 1, 3, 2])
+
         rel_lengths = 2 * n - 1 # n = im_h = im_w the feature map size
         self.rel_pos_emb = nn.Parameter(torch.randn(rel_lengths, rel_lengths, dim_k)) # n m k 
         self.rel_pos = get_relative_position_matrix(n)
@@ -70,7 +83,11 @@ class LambdaLayer(nn.Module):
         σ_K = nn.Softmax(K, dim=-1)
         λc = einsum('b m k, b m v -> b k v', σ_K, V)
 
-        embeddings = get_embedding(im_h) # n m k
+        if self.r is not None:
+            V = rearrange(V, 'b m v -> b m v p', p = 1)
+            embeddings = self.local_pos(V)
+        else:
+            embeddings = get_embedding(im_h) # n m k
         λp = einsum('n m k, b m v -> b n k v', embeddings, V)
 
         content_output = einsum('b h n k, b k v -> b n h v', Q, λc)
