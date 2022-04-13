@@ -7,5 +7,4 @@ dist
 torchlib.egg-info
 output
 MNIST
-*.ipynb
 .history
