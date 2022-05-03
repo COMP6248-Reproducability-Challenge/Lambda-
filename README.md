@@ -8,24 +8,27 @@
 - Test
     - [ ] 测试ResNet代码
 - Main
-    - [ ] [添加 Lambda Layer](https://github.com/lucidrains/lambda-networks)
+    - [X] [添加 Lambda Layer](https://github.com/lucidrains/lambda-networks)
     - [X] [相对位置编码](https://www.programcreek.com/python/?CodeExample=generate+relative+positions+matrix)
 - SE Attention
     - [X] [SE Attention代码添加](https://github.com/moskomule/senet.pytorch/blob/master/senet/se_resnet.py)
-- ResNet 改
-    - [X] [Torch 官方实现](https://pytorch.org/vision/stable/_modules/torchvision/models/resnet.html)
 
 - 数据集
     - [ ] [COCO数据集的下载](https://blog.csdn.net/m0_37644085/article/details/81948396)
 
 - 实验部分
     - [ ] 消融实验
-    - [ ] [Swin 改](https://github.com/microsoft/Swin-Transformer)
 
 - 添加Hook
     - [ ] [hook](https://blog.paperspace.com/pytorch-hooks-gradient-clipping-debugging/)
     - [ ] [grad-cam](https://github.com/jacobgil/pytorch-grad-cam)
 
+
+- 训练代码
+  - https://arxiv.org/pdf/2103.07579.pdf
+  - https://arxiv.org/pdf/1911.02150.pdf
+  - https://wandb.ai/wandb_fc/pytorch-image-models/reports/Revisiting-ResNets-Improved-Training-and-Scaling-Strategies--Vmlldzo2NDE3NTM
+  - https://colab.research.google.com/drive/1RVOvZ7AkJuV8WNJwkXxxTtByEIXVV6CC?usp=sharing
 ## 资源
 - [框架](https://github.com/L1aoXingyu/Deep-Learning-Project-Template)
 - [论文](https://openreview.net/forum?id=xTJEN-ggl1b)

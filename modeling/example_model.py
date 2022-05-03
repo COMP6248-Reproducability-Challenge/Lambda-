@@ -1,12 +1,8 @@
-# encoding: utf-8
-"""
-@author:  sherlock
-@contact: sherlockliao01@gmail.com
-"""
-
 import numpy as np
 import torch.nn.functional as F
 from layers import conv3x3
+from layers.conv_layer import conv1x1
+from layers.Lambda_layer import LambdaLayer
 from torch import nn
 
 
@@ -23,9 +19,12 @@ class BasicBlock(nn.Module):
 
     def __init__(self, in_planes, planes, stride=1):
         super(BasicBlock, self).__init__()
+        # width = int(planes * (base_width / 64.)) * groups
         self.conv1 = conv3x3(in_planes, planes, stride)
+        self.conv1 = conv1x1()
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = conv3x3(planes, planes)
+        # self.conv2 = conv3x3(planes, planes)
+        self.conv2 = LambdaLayer(dim=planes, dim_out=planes)
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
