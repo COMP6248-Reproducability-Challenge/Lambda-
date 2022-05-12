@@ -12,19 +12,21 @@ Fullgrad of lambdaResNet50(pre-trained in ImageNet)(left) and ResNet50(pre-train
 - `layers` Lambda layer and SE attention block.
 - `model` The ResNet with lambda layer.
 - `models` Our trained models.
+- `reports` Our analysis paper.
 - `KaggleTraining.ipynb` The original code we use for training our model.
 - `train.py`
 - `test.ipynb` Some tests during implementation.
 
 ## How to run
-- kaggle or colab
+- kaggle or colab(recommand) \
 Using `KaggleTraining.ipynb` in kaggle or colab, search `imagenette` to obtain the dataset, then run all the sections.
-- `python train.py` 
+- `python train.py` \
 You can modified the `Configs` inside this file.
 ## Results
 available in [wandb](https://wandb.ai/lambdadl/LambdaResNet)
+
 ## Dataset structure
-You can simply search `imagenette` in Kaggle if you use the `KaggleTraining.ipynb`
+You can simply search `imagenette` in Kaggle if you use the `KaggleTraining.ipynb`. Alternatively, you can refer to the [original repo](https://github.com/fastai/imagenette)
 
 ```bash
     ../input/imagenette/imagenette
