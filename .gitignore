@@ -8,3 +8,4 @@ torchlib.egg-info
 output
 MNIST
 .history
+.DS_Store

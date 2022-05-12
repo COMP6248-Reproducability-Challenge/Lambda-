@@ -1,7 +1,3 @@
-import re
-from tkinter.messagebox import NO
-from turtle import pos
-
 import torch
 import torch.nn as nn
 from einops import rearrange
@@ -18,14 +14,8 @@ def get_relative_position_matrix(size,):
     distance_mat += size-1
     return distance_mat
 
-def get_embedding(dim_k, n):
-    rel_lengths = 2 * n - 1 # n = im_h = im_w the feature map size
-    rel_pos_emb = nn.Parameter(torch.randn(rel_lengths, rel_lengths, dim_k)) # 2*n-1 2*n-1 k 
-    rel_pos = get_relative_position_matrix(n)
-    return rel_pos_emb[rel_pos[0], rel_pos[1]]
-
-class LambdaLayer(nn.Module):
-    def __init__(self, dim, dim_k=16, n=64, dim_out=None, heads=4, r=None):
+class LambdaLayer_own(nn.Module):
+    def __init__(self, dim, dim_k=16,n=64, dim_out=None, heads=4, r=None):
         super().__init__()
         self.dim_out = dim_out
         self.r = r
@@ -33,7 +23,7 @@ class LambdaLayer(nn.Module):
         self.k = dim_k
         assert(dim_out % heads) == 0
         self.heads = heads
-        dim_v = dim_out // heads
+        self.dim_v = dim_out // heads
 
 # (Page 5) BN after Q and V are helpful
         self.get_q = nn.Sequential(
@@ -41,20 +31,20 @@ class LambdaLayer(nn.Module):
             nn.BatchNorm2d(dim_k*heads),
         )
         self.get_v = nn.Sequential(
-            nn.Conv2d(in_channels=dim, out_channels=dim_v, kernel_size=1, bias=False),
-            nn.BatchNorm2d(dim_v),
+            nn.Conv2d(in_channels=dim, out_channels=self.dim_v, kernel_size=1, bias=False),
+            nn.BatchNorm2d(self.dim_v),
         )
         self.get_k = nn.Conv2d(in_channels=dim, out_channels=dim_k, kernel_size=1, bias=False)
 
         if r is not None:
             assert (r % 2) == 1, 'Receptive kernel size should be odd'
-            self.pos_conv = nn.Conv3d(1, dim_k, (1, r, r), padding = (0, r // 2, r // 2))
-        else:
+            self.pos_conv = nn.Conv3d(1, self.k, (r, r, 1), padding=(r // 2, r // 2, 0))
+        else:   
             # rel_lengths = 2 * n - 1 # n = im_h = im_w the feature map size
             # self.rel_pos_emb = nn.Parameter(torch.randn(rel_lengths, rel_lengths, dim_k)) # n m k 
             self.rel_pos = get_relative_position_matrix(n)
-
-
+            rel_lengths = 2 * self.n - 1 # n = im_h = im_w the feature map size
+            self.rel_pos_emb = nn.Parameter(torch.randn(rel_lengths, rel_lengths, self.k)) # 2*n-1 2*n-1 k 
 
     def forward(self,x):
         (b, c, im_h, im_w) = x.shape
@@ -72,14 +62,17 @@ class LambdaLayer(nn.Module):
         content_output = einsum('b h n k, b k v -> b n h v', Q, λc)
 
         if self.r is not None:
-            V = rearrange(V, 'b m v -> b m v p', p = 1)
+            V = rearrange(V, 'b (im_h im_w) v -> b v im_h im_w', im_h = im_h, im_w = im_w).reshape(b, 1, self.dim_v, im_h, im_w,)
             embeddings = self.pos_conv(V)
-            position_output = einsum('b h k n, b k v n -> b n h v', Q, embeddings.flatten(3))
+            position_output = einsum('b h n k, b k v n -> b n h v', Q, embeddings.flatten(3))
         else:
-            embeddings = get_embedding(self.k, im_h) # n m k
+            # embeddings = get_embedding(self.k, im_h) # n m k
+            embeddings = self.rel_pos_emb[self.rel_pos[0], self.rel_pos[1]]
+#             print(embeddings.shape)
+#             print(V.shape)
             λp = einsum('n m k, b m v -> b n k v', embeddings, V)
             position_output = einsum('b h n k, b n k v -> b n h v',Q, λp)
 
-        output = rearrange(content_output + position_output, 'b (im_h im_w) h v -> b im_h im_w (h v)', im_h=im_h, im_w=im_w)
-        
+        output = rearrange(content_output + position_output, 'b (im_h im_w) h v -> b (h v) im_h im_w', im_h=im_h, im_w=im_w)
+
         return output

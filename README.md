@@ -1,42 +1,62 @@
-## 见解：
-- XL
-    > - Context 部分使用了Softmax，直接对Context进行”总结“，而不是像之前那样 Q, K, V 的计算 
-    > - 看视频说没了Position Embedding这个结构无法发挥作用，猜测是由于patch之间的位置关系被破坏 
-    >   - 解决：利用Swin Transformer的patch分割法，尝试下能不能消除Lambda的PE
+# LambdaResNet reproduction
+This project implements Lambda-Resnet and analyzes its performance on small datasets namely ImageNette, the subset of ImageNet. With the same training configurations, we compare the differences of both training and validation loss on this dataset, with different levels of noisy labels and model architecture.
 
-## TODO:
-- Test
-    - [ ] 测试ResNet代码
-- Main
-    - [X] [添加 Lambda Layer](https://github.com/lucidrains/lambda-networks)
-    - [X] [相对位置编码](https://www.programcreek.com/python/?CodeExample=generate+relative+positions+matrix)
-- SE Attention
-    - [X] [SE Attention代码添加](https://github.com/moskomule/senet.pytorch/blob/master/senet/se_resnet.py)
+![](figure/grad_cam/lr_50_fullgrad_cam.jpg)
+![](figure/grad_cam/r50_fullgrad_cam.jpg)
 
-- 数据集
-    - [ ] [COCO数据集的下载](https://blog.csdn.net/m0_37644085/article/details/81948396)
+Fullgrad of lambdaResNet50(pre-trained in ImageNet)(left) and ResNet50(pre-trained)(right) 
+## Repo Structure
+- `data` The imageNette data class and image augmentation transform.
+- `figure` Some grad cam figures and their original image(from imageNette and gradCAM repo).
+- `grad_cam` The grad CAM code(edit from grad CAM repo).
+- `layers` Lambda layer and SE attention block.
+- `model` The ResNet with lambda layer.
+- `models` Our trained models.
+- `KaggleTraining.ipynb` The original code we use for training our model.
+- `train.py`
+- `test.ipynb` Some tests during implementation.
 
-- 实验部分
-    - [ ] 消融实验
+## How to run
+- kaggle or colab
+Using `KaggleTraining.ipynb` in kaggle or colab, search `imagenette` to obtain the dataset, then run all the sections.
+- `python train.py` 
+You can modified the `Configs` inside this file.
+## Results
+available in [wandb](https://wandb.ai/lambdadl/LambdaResNet)
+## Dataset structure
+You can simply search `imagenette` in Kaggle if you use the `KaggleTraining.ipynb`
 
-- 添加Hook
-    - [ ] [hook](https://blog.paperspace.com/pytorch-hooks-gradient-clipping-debugging/)
-    - [ ] [grad-cam](https://github.com/jacobgil/pytorch-grad-cam)
-
-
-- 训练代码
-  - https://arxiv.org/pdf/2103.07579.pdf
-  - https://arxiv.org/pdf/1911.02150.pdf
-  - https://wandb.ai/wandb_fc/pytorch-image-models/reports/Revisiting-ResNets-Improved-Training-and-Scaling-Strategies--Vmlldzo2NDE3NTM
-  - https://colab.research.google.com/drive/1RVOvZ7AkJuV8WNJwkXxxTtByEIXVV6CC?usp=sharing
-## 资源
-- [框架](https://github.com/L1aoXingyu/Deep-Learning-Project-Template)
-- [论文](https://openreview.net/forum?id=xTJEN-ggl1b)
-- [视频解析](https://www.youtube.com/watch?v=3qxJ2WD8p4w&t=668s)
--  [SE Attention知乎解析](https://zhuanlan.zhihu.com/p/102035721)
--  [SE Attention CSDN](https://blog.csdn.net/Evan123mg/article/details/80058077)
-- 其他实现的代码
-    - https://github.com/leaderj1001/LambdaNetworks
-- 有用的库
-  - https://github.com/pprp/SimpleCVReproduction
-  - https://github.com/pprp/awesome-attention-mechanism-in-cv
+```bash
+    ../input/imagenette/imagenette
+    ├── train
+    │   ├── n01440764
+    │   ├── n02102040
+    │   ├── n02979186
+    │   ├── n03000684
+    │   ├── n03028079
+    │   ├── n03394916
+    │   ├── n03417042
+    │   ├── n03425413
+    │   ├── n03445777
+    │   └── n03888257
+    ├── train_noisy_imagenette.csv
+    ├── val
+    │   ├── n01440764
+    │   ├── n02102040
+    │   ├── n02979186
+    │   ├── n03000684
+    │   ├── n03028079
+    │   ├── n03394916
+    │   ├── n03417042
+    │   ├── n03425413
+    │   ├── n03445777
+    │   └── n03888257
+    └── val_noisy_imagenette.csv
+```
+## ref
+- [some training tricks](https://wandb.ai/wandb_fc/pytorch-image-models/reports/Revisiting-ResNets-Improved-Training-and-Scaling-Strategies--Vmlldzo2NDE3NTM)
+- [lamdbda convolution](https://github.com/lucidrains/lambda-networks/blob/main/lambda_networks/lambda_networks.py)
+- [ResNet code](https://pytorch.org/vision/0.8/_modules/torchvision/models/resnet.html)
+- [training framework ref](https://github.com/L1aoXingyu/Deep-Learning-Project-Template)
+- [pre-trained models](https://github.com/rwightman/pytorch-image-models)
+- [grad CAM](https://github.com/jacobgil/pytorch-grad-cam)
