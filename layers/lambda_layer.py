@@ -14,7 +14,7 @@ def get_relative_position_matrix(size,):
     distance_mat += size-1
     return distance_mat
 
-class LambdaLayer_own(nn.Module):
+class LambdaLayer(nn.Module):
     def __init__(self, dim, dim_k=16,n=64, dim_out=None, heads=4, r=None):
         super().__init__()
         self.dim_out = dim_out

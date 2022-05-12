@@ -140,7 +140,7 @@ class ResNet(nn.Module):
 
             layers.append(block(self.inplanes, planes, groups=self.groups,
                                 base_width=self.base_width, dilation=self.dilation,
-                                norm_layer=norm_layer,feature_size=feature_size))
+                                norm_layer=norm_layer,feature_size=feature_size, layer_type=layer_type))
 
 
         return nn.Sequential(*layers)
@@ -176,7 +176,7 @@ def _resnet(arch, block, layer_type, layers, pretrained, progress, **kwargs):
     return model
 
 
-def resnet18(layer_type=None,pretrained=False, progress=True, **kwargs):
+def resnet18(layer_type=['C', 'L'],pretrained=False, progress=True, **kwargs):
     r"""ResNet-18 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
 
@@ -191,7 +191,7 @@ def resnet18(layer_type=None,pretrained=False, progress=True, **kwargs):
 # [2, 3, 5, 2] RL-38
 # [3, 4, 6, 3] RL-50
 
-def resnet34(layer_type=None, pretrained=False, progress=True, **kwargs):
+def resnet34(layer_type=['C', 'L'], pretrained=False, progress=True, **kwargs):
     r"""ResNet-34 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
 
@@ -204,7 +204,7 @@ def resnet34(layer_type=None, pretrained=False, progress=True, **kwargs):
 
 
 
-def resnet50(layer_type=None, pretrained=False, progress=True, **kwargs):
+def resnet50(layer_type=['C', 'L'], pretrained=False, progress=True, **kwargs):
     r"""ResNet-50 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
 

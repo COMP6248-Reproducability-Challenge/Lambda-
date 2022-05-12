@@ -4,7 +4,8 @@ import wandb
 from accelerate import Accelerator
 from tqdm import tqdm
 
-from data import imageNette, tranforms
+from data import tranforms
+from data.datasets.imageNette import ImageNette
 from model import resnet18, resnet34
 
 IMG_SIZE = 224
@@ -73,14 +74,14 @@ def train():
            job_type='train', tags=['lambda', 'imagenette'], 
            name=Configs['MODEL_NAME'])    
     
-    train_dataset = imageNette(
+    train_dataset = ImageNette(
         csv_file='../input/imagenette/imagenette/train_noisy_imagenette.csv', 
         root_dir='../input/imagenette/imagenette', 
         noisy_level=Configs["NOISE_LEVEL"], 
         transform=Configs['TRAIN_AUG'], 
         train=True 
     )
-    eval_dataset = imageNette(
+    eval_dataset = ImageNette(
         csv_file='../input/imagenette/imagenette/val_noisy_imagenette.csv', 
         root_dir='../input/imagenette/imagenette', 
         noisy_level=0, 
@@ -116,5 +117,5 @@ def train():
         wandb.log({'train_loss': avg_loss_train, 'eval_loss': avg_loss_eval, 'lr': lr})
     torch.save(model.state_dict(), Configs["MODEL_NAME"]+'.pt')
 
-if __name__ == 'main':
+if  __name__ == "__main__" :
     train()
