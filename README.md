@@ -1,4 +1,7 @@
 # LambdaResNet reproduction
+By Xuan Li, Xiao Feng, Changran Huang, Xiangying Wei
+Transfer from https://github.com/eziaowonder/Lambda-
+
 link to [paper](https://arxiv.org/abs/2102.08602), [YouTube](https://www.youtube.com/watch?v=3qxJ2WD8p4w)
 This project implements Lambda-Resnet and analyzes its performance on small datasets namely ImageNette, the subset of ImageNet. With the same training configurations, we compare the differences of both training and validation loss on this dataset, with different levels of noisy labels and model architecture.
 
