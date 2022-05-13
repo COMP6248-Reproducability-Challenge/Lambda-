@@ -3,7 +3,6 @@ import torch.nn as nn
 import wandb
 from accelerate import Accelerator
 from tqdm import tqdm
-from zmq import device
 
 from data import tranforms
 from data.datasets.imageNette import ImageNette
