@@ -36,7 +36,7 @@ def train_fn(model, train_data_loader, optimizer, epoch, accelerator,scheduler):
         optimizer.zero_grad()
         out = model(data[0])
         data[1] = data[1].type(torch.LongTensor)
-        data[1].to(Configs["DEVICE"])
+        data[1] = data[1].to(Configs["DEVICE"])
         loss = nn.CrossEntropyLoss()(
             out, data[1].flatten()
             )
@@ -61,7 +61,7 @@ def eval_fn(model, eval_data_loader, epoch):
         for t, data in enumerate(tk):
             out = model(data[0])
             data[1] = data[1].type(torch.LongTensor)
-            data[1].to(Configs["DEVICE"])
+            data[1] = data[1].to(Configs["DEVICE"])
             loss = nn.CrossEntropyLoss()(
                 out, data[1].flatten()
                 )
