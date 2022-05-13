@@ -3,6 +3,7 @@ import torch.nn as nn
 import wandb
 from accelerate import Accelerator
 from tqdm import tqdm
+from zmq import device
 
 from data import tranforms
 from data.datasets.imageNette import ImageNette
@@ -35,6 +36,7 @@ def train_fn(model, train_data_loader, optimizer, epoch, accelerator,scheduler):
     for t, data in enumerate(tk):
         optimizer.zero_grad()
         out = model(data[0])
+        data[1] = data[1].type(torch.LongTensor,device='cuda')
         loss = nn.CrossEntropyLoss()(
             out, data[1].flatten()
             )
@@ -58,6 +60,7 @@ def eval_fn(model, eval_data_loader, epoch):
     with torch.no_grad():
         for t, data in enumerate(tk):
             out = model(data[0])
+            data[1] = data[1].type(torch.LongTensor,device='cuda')
             loss = nn.CrossEntropyLoss()(
                 out, data[1].flatten()
                 )
